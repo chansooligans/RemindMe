@@ -22,3 +22,6 @@ def receive_sms():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+# flask run --host=0.0.0.0
+# flask run --host=54.210.64.57
