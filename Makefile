@@ -6,8 +6,9 @@ tests_all:
 test-file:
 	poetry run pytest -v -rP $(file)
 
-book:
-	poetry run jb build book
+postgres:
+	cd remindme/db/postgres \
+	&& docker-compose up
 
-serve:
-	python -m http.server -d book/_build/html $(port)
+postgres-delete:
+	cd remindme/db/postgres && docker-compose down --volumes --remove-orphans
