@@ -110,4 +110,7 @@ class RequestHandler:
                 ]
             )
 
-            return HttpResponse(res)
+            resp = MessagingResponse()
+            resp.message(res)
+
+            return HttpResponse(str(resp))
