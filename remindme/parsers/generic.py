@@ -7,6 +7,21 @@ from django.http import HttpResponse
 from twilio.twiml.messaging_response import MessagingResponse
 
 
+def get_gpt_standard_response(prompt):
+    response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
+        messages=[
+            {
+                "role": "system",
+                "content": "You are a helpful assistant. Please ensure your response is less than 320 characters.",
+            },
+            {"role": "user", "content": prompt},
+        ],
+    )
+
+    return response["choices"][0]["message"]["content"]
+
+
 def get_gpt_email_response(prompt):
     response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
