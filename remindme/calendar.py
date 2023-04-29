@@ -11,20 +11,26 @@ class Event:
         if "dateTime" in self.event["start"].keys():
             datetime_string = self.event["start"]["dateTime"]
             dt_object = datetime.fromisoformat(datetime_string)
-            return dt_object.strftime("%Y-%m-%d %H:%M")
-        return self.event["start"]["date"]
+            return dt_object.strftime("%A %Y-%m-%d @ %H:%M")
+        elif "date" in self.event["start"].keys():
+            datetime_string = self.event["start"]["date"]
+            dt_object = datetime.strptime(datetime_string, "%Y-%m-%d")
+            return dt_object.strftime("%A, %Y-%m-%d")
 
     @property
     def end(self):
         if "dateTime" in self.event["end"].keys():
             datetime_string = self.event["end"]["dateTime"]
             dt_object = datetime.fromisoformat(datetime_string)
-            return dt_object.strftime("%Y-%m-%d %H:%M")
-        return self.event["end"]["date"]
+            return dt_object.strftime("%A %Y-%m-%d @ %H:%M")
 
     @property
     def summary(self):
         return self.event["summary"]
+
+    @property
+    def all_day(self):
+        return "date" in self.event["start"]
 
 
 # Function to schedule an event on Google Calendar
