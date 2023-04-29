@@ -67,7 +67,6 @@ class RequestHandler:
             return HttpResponse(str(resp))
 
         elif self.parsed["classification"] == "reminder":
-            print(self.parsed.keys())
             event = self.ScheduledEvent(
                 summary=self.parsed["summary"],
                 location=self.parsed["location"],
@@ -77,7 +76,6 @@ class RequestHandler:
                 phone_number=self.sender_phone_number,
             )
             event.save()
-            print("saved")
 
             # Start our TwiML response
             resp = MessagingResponse()

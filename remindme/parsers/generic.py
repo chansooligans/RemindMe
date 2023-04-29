@@ -1,6 +1,7 @@
-import openai
-from datetime import datetime
 import json
+from datetime import datetime
+
+import openai
 import pytz
 from django.core.mail import send_mail
 from django.http import HttpResponse
@@ -47,8 +48,6 @@ def get_gpt_email_response(prompt):
             },
         ],
     )
-
-    print(response)
 
     response = json.loads(response["choices"][0]["message"]["content"])
 

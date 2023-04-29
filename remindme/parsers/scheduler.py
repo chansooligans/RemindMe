@@ -1,6 +1,7 @@
-import openai
-from datetime import datetime
 import json
+from datetime import datetime
+
+import openai
 import pytz
 from django.core.mail import send_mail
 from django.http import HttpResponse
@@ -20,7 +21,7 @@ def get_gpt4_schedule_response(prompt):
         },
         {
             "role": "system",
-            "content": f"""
+            "content": """
                 Classify the request as one of the following:
                 - schedule
                 - reminder
@@ -50,13 +51,8 @@ def get_gpt4_schedule_response(prompt):
         },
     ]
 
-    print(messages)
-
     response = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=messages)
-
-    print(response)
     response = json.loads(response["choices"][0]["message"]["content"])
-    print("parsed:", response)
 
     for k in ["summary", "location", "description", "start", "end", "classification"]:
         if k not in response.keys():
