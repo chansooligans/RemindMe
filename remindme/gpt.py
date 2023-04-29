@@ -2,6 +2,9 @@ import openai
 from datetime import datetime
 import json
 import pytz
+from django.core.mail import send_mail
+from django.http import HttpResponse
+from twilio.twiml.messaging_response import MessagingResponse
 
 
 def get_gpt4_schedule_response(prompt):
@@ -114,3 +117,22 @@ def get_gpt_email_response(prompt):
             response[k] = ""
 
     return response
+
+
+def openai_standard(message_body):
+    if message_body.startswith("openai, email"):
+        response = get_gpt_email_response(message_body.split("openai, email")[-1])
+        send_mail(
+            response["subject_line"],
+            response["body"],
+            "chansoosong@gmail.com",
+            ["chansoosong@gmail.com"],
+            fail_silently=False,
+        )
+        return HttpResponse("email has been delivered")
+
+    else:  # otherwise text message
+        response = get_gpt_standard_response(message_body.split("openai,")[-1])
+        resp = MessagingResponse()
+        resp.message(response)
+        return HttpResponse(str(resp))
