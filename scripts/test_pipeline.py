@@ -5,7 +5,7 @@ if get_ipython() is not None:
     get_ipython().run_line_magic("load_ext", "autoreload")
     get_ipython().run_line_magic("autoreload", "2")
 from remindme import config, parsers
-from remindme.main import MessageHandler
+from remindme.main import MessageParser
 
 config.setup()
 
@@ -15,6 +15,6 @@ message_body = """
 """.strip()
 
 # %%
-handler = MessageHandler(message_body=message_body)
+handler = MessageParser(message_body=message_body)
 res = handler.parse_message()
 res
