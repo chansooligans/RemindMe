@@ -1,5 +1,5 @@
-import datetime
 from dataclasses import dataclass
+from datetime import datetime
 
 import googleapiclient
 from django.db import models
@@ -12,9 +12,17 @@ from remindme import calendar, parsers
 @dataclass
 class ScheduleParser:
     message_body: str
+    requestType: str
 
     def parse(self):
-        return parsers.scheduler.get_gpt4_schedule_response(self.message_body)
+        if self.requestType in ["schedule", "reminder"]:
+            return parsers.scheduler.parse_schedule_reminder_request(
+                self.message_body, self.requestType
+            )
+        elif self.requestType in ["calendar_query", "reminder_query"]:
+            return parsers.scheduler.parse_calendar_request(
+                self.message_body, self.requestType
+            )
 
 
 @dataclass
@@ -35,8 +43,8 @@ class MessageParser:
             self._type = "generic"
             self.parser = OpenAIParser(self.message_body)
         else:
-            self._type = "scheduler"
-            self.parser = ScheduleParser(self.message_body)
+            self._type = parsers.scheduler.request_classifier(self.message_body)
+            self.parser = ScheduleParser(self.message_body, requestType=self._type)
 
     def parse_message(self):
         return self.parser.parse()
@@ -89,3 +97,14 @@ class RequestHandler:
             )
 
             return HttpResponse(str(resp))
+
+        elif self.parsed["classification"] == "calendar_query":
+            events = calendar.query_calendar(self.calendar_service, self.parsed)
+            return HttpResponse(
+                ", \n".join(
+                    [
+                        f"""{x["summary"]} from {x["start"]} to {x["end"]}"""
+                        for x in events["items"]
+                    ]
+                )
+            )
