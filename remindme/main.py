@@ -7,6 +7,7 @@ from django.http import HttpResponse
 from twilio.twiml.messaging_response import MessagingResponse
 
 from remindme import calendar, parsers
+from remindme.calendar import Event
 
 
 @dataclass
@@ -101,11 +102,12 @@ class RequestHandler:
 
         elif self.parsed["classification"] == "calendar_query":
             events = calendar.query_calendar(self.calendar_service, self.parsed)
-            return HttpResponse(
-                ", \n".join(
-                    [
-                        f"""{x["summary"]} from {x["start"]} to {x["end"]}"""
-                        for x in events["items"]
-                    ]
-                )
+            events = [Event(event) for event in events["items"]]
+            res = ", \n".join(
+                [
+                    f"{event.summary} from {event.start} to {event.end}"
+                    for event in events
+                ]
             )
+
+            return HttpResponse(res)
