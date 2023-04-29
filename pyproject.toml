@@ -25,6 +25,7 @@ pyyaml = "^6.0"
 flask = "^2.2.3"
 django = "^4.2"
 django-extensions = "^3.2.1"
+ipython = "8.12"
 
 [tool.poetry.dev-dependencies]
 
