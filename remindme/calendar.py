@@ -9,6 +9,7 @@ def schedule_event(calendar_service, event):
 
 
 def query_calendar(calendar_service, events):
+    events.pop("classification")
     return (
         calendar_service.events()
         .list(calendarId="chansoosong@gmail.com", **events)

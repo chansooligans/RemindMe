@@ -44,6 +44,7 @@ class MessageParser:
             self.parser = OpenAIParser(self.message_body)
         else:
             self._type = parsers.scheduler.request_classifier(self.message_body)
+            print(self._type)
             self.parser = ScheduleParser(self.message_body, requestType=self._type)
 
     def parse_message(self):

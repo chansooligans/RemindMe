@@ -99,9 +99,9 @@ def parse_calendar_request(prompt, responseType):
                 ```
                 {
                     "timeMin": "2023-04-16T09:00:00-04:00", # the minimum time to query
-                    "timeMax": "2023-04-16T09:00:00-04:00", # the maximum time to query
+                    "timeMax": "", # the maximum time to query; leave blank  unless prompt specifies a time period.
                     "maxResults": 10, # use 20 as default
-                    "q": "" # Free text search terms to find events that match these terms. Add similar search terms comma separated that might help search.
+                    "q": "" # Free text search terms to find events that match these terms; add similar search terms comma separated that might help search.
                 }
                 ```
                 The JSON response:
@@ -115,7 +115,8 @@ def parse_calendar_request(prompt, responseType):
     response["orderBy"] = "startTime"
     response["classification"] = responseType
 
-    for k in ["summary", "location", "description", "start", "end", "classification"]:
+    for k in ["timeMin", "timeMax", "maxResults", "q"]:
         if k not in response.keys():
             response[k] = ""
-    response
+
+    return response
