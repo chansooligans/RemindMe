@@ -28,11 +28,14 @@ class OpenAIParser:
 @dataclass
 class MessageParser:
     message_body: str
+    _type: str = None
 
     def __post_init__(self):
         if self.message_body.startswith("openai"):
+            self._type = "generic"
             self.parser = OpenAIParser(self.message_body)
         else:
+            self._type = "scheduler"
             self.parser = ScheduleParser(self.message_body)
 
     def parse_message(self):
