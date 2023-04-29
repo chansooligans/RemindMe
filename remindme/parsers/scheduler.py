@@ -31,7 +31,7 @@ def request_classifier(prompt):
     ]
 
     response = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=messages)
-    return response["choices"][0]["message"]["content"]
+    return response["choices"][0]["message"]["content"].strip(".")
 
 
 def parse_schedule_reminder_request(prompt, responseType):
@@ -48,13 +48,14 @@ def parse_schedule_reminder_request(prompt, responseType):
         {
             "role": "system",
             "content": """
+                The goal is to parse the prompt into a JSON object to send to an API.
                 Do not include any explanations, only provide a  RFC8259 compliant JSON response following this format without deviation
                 and make sure all keys are included in the object. Make sure the start time is still in Eastern Daylight Time.
                 ```
                 {
-                    "summary": "Google I/O 2015",
-                    "location": "800 Howard St., San Francisco, CA 94103",
-                    "description": "A chance to hear more about Google\'s developer products.",
+                    "summary": "Google I/O 2015", # name of the event to be scheduled
+                    "location": "800 Howard St., San Francisco, CA 94103", # location of the event to be scheduled
+                    "description": "A chance to hear more about Google\'s developer products.", # description of the event to be scheduled
                     "start": {
                         "dateTime": "2023-04-16T09:00:00-04:00"
                     },
@@ -99,9 +100,9 @@ def parse_calendar_request(prompt, responseType):
                 ```
                 {
                     "timeMin": "2023-04-16T09:00:00-04:00", # the minimum time to query
-                    "timeMax": "", # the maximum time to query; leave blank  unless prompt specifies a time period.
-                    "maxResults": 10, # use 20 as default
-                    "q": "" # Free text search terms to find events that match these terms; add similar search terms comma separated that might help search.
+                    "timeMax": None, # optional; the maximum time to query;
+                    "maxResults": 10, # use 10 as default
+                    "q": "" # Free text search terms to find events that match these terms; Use if prompt seeks to query events; Add similar search terms comma separated that might help search.
                 }
                 ```
                 The JSON response:

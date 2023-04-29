@@ -105,7 +105,7 @@ class RequestHandler:
             events = [Event(event) for event in events["items"]]
             res = ", \n".join(
                 [
-                    f"{event.summary} from {event.start} to {event.end}"
+                    f"- {event.summary} from {event.start} to {event.end}"
                     for event in events
                 ]
             )

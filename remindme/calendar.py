@@ -40,6 +40,7 @@ def schedule_event(calendar_service, event):
 # Function to query events on Google Calendar
 def query_calendar(calendar_service, events):
     events.pop("classification")
+    print(events)
     return (
         calendar_service.events()
         .list(calendarId="chansoosong@gmail.com", **events)
